@@ -1,6 +1,6 @@
 <template>
     <div class="search-bar">
-        <input name="search-item" :value="modelValue" @input="handleInput">
+        <input name="search-item" :value="modelValue" @input="handleInput" @keyup.enter="handleClick">
         <button @click="handleClick">Search</button>
     </div>
 </template>
