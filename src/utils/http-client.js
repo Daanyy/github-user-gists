@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { API_URL, ACCESS_TOKEN } from './global-constants'
 
 export class HttpClient {
   constructor() {
@@ -21,7 +22,7 @@ export class HttpClient {
 
   _handleRequest(requestConfig) {
     if (requestConfig && requestConfig.headers) {
-        requestConfig.headers.Authorization = `Bearer ${ACCESS_TOKEN}`
+        requestConfig.headers.Authorization = `token ${ACCESS_TOKEN}`
     }
 
     return requestConfig
