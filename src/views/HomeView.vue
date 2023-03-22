@@ -35,7 +35,7 @@ const searchUser = async () => {
   await userService.getUserDetails(state.username).then( result => mapUserDetails( result.data ) ).catch( err => alert( err.response.data.message ) )
 
   await userService.getUserGists(state.username).then( result => state.userGists = result.data ).catch( err => alert( err.response.data.message ) )
-
+  
   state.username = ''
 }
 </script>

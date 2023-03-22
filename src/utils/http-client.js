@@ -20,6 +20,13 @@ export class HttpClient {
     })
   }
 
+  externalRequest(url) {
+    return this._axiosInstance.request({
+      baseURL: url.url,
+      method: url.method
+    })
+  }
+
   _handleRequest(requestConfig) {
     if (requestConfig && requestConfig.headers) {
         requestConfig.headers.Authorization = `token ${ACCESS_TOKEN}`
