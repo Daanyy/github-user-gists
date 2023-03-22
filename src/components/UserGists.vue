@@ -2,15 +2,15 @@
     <div class="user-gists">
         <p v-if="state.loading" style="text-align: center;">Loading..</p>
         <ul v-else>
-            <li class="user-gist" v-for="userGist in state.userGists" :key="userGist.id" >
-                <UserGist :user-gist="userGist" :gist-code="state.code" @click="handleClick" />
+            <li class="user-gist" v-for="(userGist, index) in state.userGists" :key="userGist.id" >
+                <UserGist :user-gist="userGist" :gist-code="state.code" @click="handleClick" :ref="(el) => (userGistsRef[index] = el)" />
             </li>
         </ul>
     </div>
 </template>
 
 <script setup>
-import { reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { userService } from '../services/user.service';
 import UserGist from './UserGist.vue';
 
@@ -19,6 +19,8 @@ const props = defineProps({
         type: Array
     }
 })
+
+const userGistsRef = ref([])
 
 const state = reactive({
     userGists: [],
@@ -71,6 +73,8 @@ onMounted( async () => {
 
 const handleClick = async ( item ) => {
     state.code = ''
+
+    userGistsRef.value.map( elem => elem.refreshComponent( item.id ) )
 
     if( item.rowUrl && item.rowUrl != '' )
         await userService.getPageContent(item.rowUrl).then( result => state.code = result.data )

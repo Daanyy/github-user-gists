@@ -28,7 +28,7 @@
 <script setup>
 import { ref } from 'vue';
 
-defineProps({
+const props = defineProps({
     userGist: {
         type: Object
     },
@@ -49,4 +49,11 @@ const handleClick = (item) => {
     
     emit('click', item)
 }
+
+const refreshComponent = ( id ) => {
+    if( id !== props.userGist.id ) {
+        isToggled.value = false
+    }
+}
+defineExpose({refreshComponent})
 </script>
