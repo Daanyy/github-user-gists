@@ -10,20 +10,13 @@ export class HttpClient {
 
   request(url, data) {
     return this._axiosInstance.request({
-      baseURL: API_URL,
-      url: url.url,
+      baseURL: url.baseURL ?? API_URL,
+      url: url.url ?? '',
       method: url.method,
       data: data,
       headers: url.headers,
       params: url.params,
       responseType: url.responseType,
-    })
-  }
-
-  externalRequest(url) {
-    return this._axiosInstance.request({
-      baseURL: url.url,
-      method: url.method
     })
   }
 

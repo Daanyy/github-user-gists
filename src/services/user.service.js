@@ -28,9 +28,9 @@ export class UserService {
     return result
   }
 
-  async getPageContent(url) {
+  async getPageContent(baseURL) {
     const result = await httpClient.request({
-      url,
+      baseURL,
       method: 'get',
     })
 

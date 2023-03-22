@@ -1,7 +1,9 @@
 <template>
     <div class="search-bar">
-        <input name="search-item" :value="modelValue" @input="handleInput" @keyup.enter="handleClick">
-        <button @click="handleClick">Search</button>
+        <input name="search-item" :value="modelValue" @input="handleInput" @keyup.enter="handleClick" autocomplete="off" placeholder="Search GitHub User">
+        <span class="search-button" @click="handleClick">
+            <img src="./../assets/images/loupe.png">
+        </span> 
     </div>
 </template>
 

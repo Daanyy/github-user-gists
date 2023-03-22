@@ -3,7 +3,7 @@
     <SearchBar v-model="state.username" @click="searchUser"/>
     <div class="user-details">
         <UserProfile :user-details="state.userDetails" />
-        <UserGists :user-gists="state.userGists" />
+        <UserGists v-if="state.userGists.length > 0" v-model="state.userGists" />
     </div>
   </main>
 </template>
@@ -29,12 +29,30 @@ const mapUserDetails = (userDetails) => {
   state.userDetails.description = userDetails.bio
 }
 
+const parseUserGists = ( gists ) => {
+  gists.map( async gist => {
+    const gistObj = {}
+
+    gistObj.id = gist.id
+    gistObj.avatar = gist.owner.avatar_url ?? ''
+    gistObj.username = gist.owner.login
+    gistObj.files = gist.files
+    gistObj.createdAt = gist.created_at
+
+    state.userGists.push( gistObj )
+  })
+}
+
 const searchUser = async () => {
   if( state.username === '' ) return
 
+  state.userGists = []
+
   await userService.getUserDetails(state.username).then( result => mapUserDetails( result.data ) ).catch( err => alert( err.response.data.message ) )
 
-  await userService.getUserGists(state.username).then( result => state.userGists = result.data ).catch( err => alert( err.response.data.message ) )
+  await userService.getUserGists(state.username).then( 
+    result => parseUserGists(result.data) 
+  ).catch( err => alert( err.response.data.message ) )
   
   state.username = ''
 }
