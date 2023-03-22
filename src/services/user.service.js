@@ -23,6 +23,7 @@ export class UserService {
     const result = await httpClient.request({
       url: `/gists/${gistId}/forks`,
       method: 'get',
+      params: { per_page: 5 }
     })
 
     return result

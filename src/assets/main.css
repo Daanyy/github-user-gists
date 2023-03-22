@@ -64,8 +64,14 @@
 
 .user-gist {
   list-style-type: none;
-  margin-bottom: 20px;
+  padding-bottom: 20px;
+  margin-bottom: 10px;
   cursor: pointer;
+  border-bottom: 1px solid #d3d3d3;
+}
+
+.user-gist:last-child {
+  border-bottom: none;
 }
 
 .gist-info .user-avatar, .gist-info .gist-user-details, .gist-info .gist-badge {
@@ -114,4 +120,10 @@
   color: #fff;
   border-radius: 3px;
   margin-left: 5px;
+}
+
+.gist-code pre {
+  background: #000;
+  color: #fff;
+  padding: 30px 10px 0;
 }

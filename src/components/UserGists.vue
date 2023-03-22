@@ -1,25 +1,9 @@
 <template>
     <div class="user-gists">
-        <ul>
-            <li class="user-gist" v-for="userGist in state.userGists" :key="userGist.id">
-                <div class="gist-info">
-                    <span v-if="userGist.avatar" class="user-avatar" :style="`background-image: url(${userGist.avatar})`"></span>
-                    <div class="gist-user-details">
-                        <p>{{ userGist.username }} / {{ userGist.file }}</p>
-                        <p>{{ userGist.createdAt }}</p>
-                    </div>
-                    <p v-if="userGist.badges.length > 0" class="gist-badge">
-                        <span v-for="(badge, index) in userGist.badges" :key="index" class="badge">{{ badge }}</span>
-                    </p>
-                </div>
-                <div v-if="userGist.forks.length > 0" class="gist-forks">
-                    <span>Forked by: </span>
-                    <p v-for="(fork, index) in userGist.forks" :key="index" class="user-fork">
-                        <span v-if="fork.owner.avatar_url" class="user-avatar" :style="`background-image: url(${fork.owner.avatar_url})`"></span>
-                        <span v-if="fork.owner.login" class="user-login" >{{ fork.owner.login }}</span>
-                    </p>
-                </div>
-                <div class="gist-code"></div>
+        <p style="text-align: center;" v-if="state.loading">Loading..</p>
+        <ul v-else>
+            <li class="user-gist" v-for="userGist in state.userGists" :key="userGist.id" >
+                <UserGist :user-gist="userGist" :gist-code="state.code" @click="handleClick"/>
             </li>
         </ul>
     </div>
@@ -28,6 +12,7 @@
 <script setup>
 import { reactive, onMounted } from 'vue';
 import { userService } from '../services/user.service';
+import UserGist from './UserGist.vue';
 
 const props = defineProps({
     modelValue: {
@@ -36,35 +21,58 @@ const props = defineProps({
 })
 
 const state = reactive({
-    userGists: []
+    userGists: [],
+    code: null,
+    loading: false
 })
 
 const generateBadges = (files) => {
     let data = []
     
-    for (var key in files) {
+    for (var key in files) 
         files[key].language ? data.push( files[key].language ) : ''
-    }
-
 
     return [...new Set(data)]
 }
 
+const generateRowUrl = (files) => {
+    let rowUrl = ''
+
+    for (var key in files) {
+        if( files[key].raw_url ) {
+            rowUrl = files[key].raw_url
+            break;
+        }
+    }
+        
+    return rowUrl
+}
+
 onMounted( async () => {
+    state.loading = true
     for( let i=0; i < props.modelValue.length; i++ ) {
         const gistObj = {}
 
+        gistObj.id = props.modelValue[i].id
         gistObj.avatar = props.modelValue[i].avatar ?? ''
         gistObj.username = props.modelValue[i].username
         gistObj.file = Object.keys(props.modelValue[i].files)[0]
         gistObj.createdAt = props.modelValue[i].createdAt
-        gistObj.badges = generateBadges( props.modelValue[i].files )
+        gistObj.badges = generateBadges(props.modelValue[i].files)
+        gistObj.rowUrl = generateRowUrl(props.modelValue[i].files)
         
         await userService.getUserForks(props.modelValue[i].id).then( result => {
             gistObj.forks = result.data 
-
             state.userGists.push( gistObj )
         } )
     }
+    state.loading = false
 })
+
+const handleClick = async ( item ) => {
+    state.code = ''
+    
+    if( item.rowUrl && item.rowUrl != '' )
+        await userService.getPageContent(item.rowUrl).then( result => state.code = result.data )
+}
 </script>

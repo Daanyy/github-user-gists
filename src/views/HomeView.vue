@@ -2,7 +2,7 @@
   <main>
     <SearchBar v-model="state.username" @click="searchUser"/>
     <div class="user-details">
-        <UserProfile :user-details="state.userDetails" />
+        <UserProfile :user-details="state.userDetails" :loading="state.gettingUserDetails"/>
         <UserGists v-if="state.userGists.length > 0" v-model="state.userGists" />
     </div>
   </main>
@@ -19,7 +19,8 @@ const state = reactive({
   username: '',
   userDetails: {},
   userGists: [],
-  isLoading: false
+  gettingUserDetails: false,
+  gettingUserGigst: false
 })
 
 const mapUserDetails = (userDetails) => {
@@ -47,13 +48,17 @@ const searchUser = async () => {
   if( state.username === '' ) return
 
   state.userGists = []
+  state.gettingUserDetails = state.gettingUserGigst = true
 
-  await userService.getUserDetails(state.username).then( result => mapUserDetails( result.data ) ).catch( err => alert( err.response.data.message ) )
-
+  await userService.getUserDetails(state.username).then( result => mapUserDetails( result.data ) ).catch( err => alert( err.response.data.message ) ).finally( () => state.gettingUserDetails = false )
+  
   await userService.getUserGists(state.username).then( 
     result => parseUserGists(result.data) 
-  ).catch( err => alert( err.response.data.message ) )
-  
+  )
+  .catch( err => alert( err.response.data.message ) 
+  )
+  .finally( ()=> state.gettingUserGigst = false )
+
   state.username = ''
 }
 </script>
