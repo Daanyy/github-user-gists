@@ -12,3 +12,6 @@ npm install
 
 ### 3. Start the server
 npm run dev
+
+### 4. Click on the URL from the terminal
+e.g. http://127.0.0.1:5173/
