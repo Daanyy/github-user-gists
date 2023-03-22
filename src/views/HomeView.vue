@@ -50,15 +50,16 @@ const searchUser = async () => {
   state.userGists = []
   state.gettingUserDetails = state.gettingUserGigst = true
 
-  await userService.getUserDetails(state.username).then( result => mapUserDetails( result.data ) ).catch( err => alert( err.response.data.message ) ).finally( () => state.gettingUserDetails = false )
-  
-  await userService.getUserGists(state.username).then( 
-    result => parseUserGists(result.data) 
-  )
-  .catch( err => alert( err.response.data.message ) 
-  )
-  .finally( ()=> state.gettingUserGigst = false )
-
-  state.username = ''
+  await userService.getUserDetails(state.username)
+    .then(async result => 
+      { 
+        mapUserDetails( result.data )
+        await userService.getUserGists(state.username)
+          .then( result => parseUserGists(result.data) )
+          .catch( err => alert( err.response.data.message ) )
+          .finally( ()=> { state.gettingUserGigst = false; state.username = '' } )
+    })
+    .catch( err => alert( err.response.data.message ) )
+    .finally( () => state.gettingUserDetails = false )
 }
 </script>

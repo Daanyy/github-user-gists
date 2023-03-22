@@ -21,7 +21,7 @@ export class HttpClient {
   }
 
   _handleRequest(requestConfig) {
-    if (requestConfig && requestConfig.headers && requestConfig.baseURL === API_URL) {
+    if (requestConfig && requestConfig.headers && requestConfig.baseURL === API_URL && ACCESS_TOKEN !== '') {
         requestConfig.headers.Authorization = `token ${ACCESS_TOKEN}`
     }
 
