@@ -18,9 +18,7 @@
             </p>
         </div>
         <div v-if="isToggled && gistCode" class="gist-code">
-            <pre>
-                {{ gistCode }}
-            </pre>
+            <pre>{{ gistCode }}</pre>
         </div>
     </div>
 </template>
