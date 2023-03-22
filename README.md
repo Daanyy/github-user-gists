@@ -20,10 +20,10 @@ e.g. http://127.0.0.1:5173/
 
 ## Other future features
 
-~ Create a pagination for the gists (performance improvement)
-~ Make the request for the forks separately, e.g. after pressing a 'See forks' button (performance improvement)
-~ Search history
-~ Design improvements
+### Create a pagination for the gists (performance improvement)
+### Make the request for the forks separately, e.g. after pressing a 'See forks' button (performance improvement)
+### Search history
+### Design improvements
 
 ### Test data
 vsouza, nick
